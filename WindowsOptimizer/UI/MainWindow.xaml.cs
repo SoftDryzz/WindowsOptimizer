@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -17,35 +19,60 @@ namespace WindowsOptimizer.UI
         {
             InitializeComponent();
 
-            MessageBox.Show(
-                "⚠️ IMPORTANT NOTICE ⚠️\n\n" +
-                "The CPU usage displayed may differ from Task Manager due to:\n" +
-                "- Different update intervals.\n" +
-                "- Windows internal optimizations.\n" +
-                "- Distribution of CPU load across logical processors.\n\n" +
-                "This tool provides an approximate real-time value, but variations may occur.",
-                "Information", MessageBoxButton.OK, MessageBoxImage.Information
-            );
-
-            Task.Run(() =>
+            // Verificar si la app tiene permisos de administrador
+            if (!IsRunningAsAdministrator())
             {
-                SystemInfoHelper.InitializeCpuCounter();
-            });
+                MessageBox.Show(
+                    "⚠️ This application requires administrator privileges for full functionality.\n\n" +
+                    "It will now restart with elevated permissions.",
+                    "Administrator Required", MessageBoxButton.OK, MessageBoxImage.Warning
+                );
 
-            Task.Delay(1000).ContinueWith(_ =>
+                RestartAsAdministrator();
+                Application.Current.Shutdown(); // Cierra la instancia actual
+                return;
+            }
+
+            // Iniciar el temporizador de actualización
+            var updateTimer = new DispatcherTimer
             {
-                Dispatcher.Invoke(() =>
-                {
-                    var updateTimer = new DispatcherTimer
-                    {
-                        Interval = TimeSpan.FromSeconds(1)
-                    };
-                    updateTimer.Tick += UpdateSystemInfo;
-                    updateTimer.Start();
-                });
-            });
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            updateTimer.Tick += UpdateSystemInfo;
+            updateTimer.Start();
         }
 
+        /// <summary>
+        /// Checks if the application is running as an administrator.
+        /// </summary>
+        private static bool IsRunningAsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        /// <summary>
+        /// Restarts the application with administrator privileges.
+        /// </summary>
+        private static void RestartAsAdministrator()
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Process.GetCurrentProcess().MainModule.FileName,
+                UseShellExecute = true,
+                Verb = "runas" // Pide elevación de permisos
+            };
+
+            try
+            {
+                Process.Start(startInfo);
+            }
+            catch
+            {
+                MessageBox.Show("Failed to restart with administrator privileges.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         /// <summary>
         /// Handles the event to clean temporary files with animated progress and logs.
