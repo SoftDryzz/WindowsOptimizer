@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Utils\" />
+    <PackageReference Include="System.Management" Version="9.0.2" />
   </ItemGroup>
 
 </Project>

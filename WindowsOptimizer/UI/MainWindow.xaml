@@ -1,12 +1,34 @@
-﻿<Window x:Class="WindowsOptimizer.MainWindow"
+﻿<Window x:Class="WindowsOptimizer.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WindowsOptimizer"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Windows Optimizer" Height="450" Width="600"
+        Background="Black" Foreground="White">
 
+    <Grid Margin="10">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+
+            <!-- Title -->
+            <TextBlock Text="Windows Optimizer" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,10"/>
+
+            <!-- System Information -->
+            <TextBlock Text="System Information:" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="CpuUsageText" Text="CPU Usage: ..." FontSize="14" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="RamUsageText" Text="RAM Usage: ..." FontSize="14" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock x:Name="DiskUsageText" Text="Disk Space: ..." FontSize="14" HorizontalAlignment="Center" Margin="5"/>
+
+            <!-- Progress Indicator -->
+            <ProgressBar x:Name="ProgressBar" Width="250" Height="10" Visibility="Collapsed" Margin="10"/>
+
+            <!-- Action Buttons -->
+            <Button x:Name ="CleanTempFilesButton" Content="🧹 Clean Temporary Files" Click="CleanTempFiles_Click"
+                    Width="250" Height="40" Background="#007ACC" Foreground="White" Margin="10"/>
+
+            <Button x:Name ="FreeRamButton" Content="🚀 Free RAM" Click="FreeRam_Click"
+                    Width="250" Height="40" Background="#28A745" Foreground="White" Margin="10"/>
+
+            <!-- Status Text -->
+            <TextBlock x:Name="StatusText" Text="Status: Ready" FontSize="14" HorizontalAlignment="Center" Margin="10"/>
+
+        </StackPanel>
     </Grid>
 </Window>
