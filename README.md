@@ -1,5 +1,5 @@
 # 🖥️ Windows Optimizer - System Performance Enhancer
-
+Last Update 08/06/2024
 **Windows Optimizer** is a **powerful system utility** built in **C# (WPF)** to enhance system performance by **cleaning temporary files, optimizing RAM usage, and displaying real-time system metrics**.
 
 ![Windows Optimizer](https://img.shields.io/badge/C%23-WPF-blue.svg) ![License](https://img.shields.io/badge/License-MIT-green.svg)
